@@ -884,13 +884,15 @@ AddEventHandler('esx_vehicleshop:hasEnteredMarker', function (zone)
       end
 
       local resellPrice = math.floor(vehicleData.price / 100 * Config.ResellPercentage)
+	  local normalPrice = vehicleData.price
 
       CurrentAction     = 'resell_vehicle'
       CurrentActionMsg  = _U('sell_menu', vehicleData.name, resellPrice)
 
       CurrentActionData = {
         vehicle = vehicle,
-        price   = resellPrice
+        price   = resellPrice,
+		originalPrice = normalPrice
       }
     end
   end
@@ -1014,7 +1016,7 @@ Citizen.CreateThread(function ()
 						else
 							ESX.ShowNotification(_U('not_yours'))
 						end
-					end, GetVehicleNumberPlateText(CurrentActionData.vehicle), CurrentActionData.price)
+					end, GetVehicleNumberPlateText(CurrentActionData.vehicle), CurrentActionData.price, CurrentActionData.originalPrice)
 				elseif CurrentAction == 'boss_actions_menu' then
 					OpenBossActionsMenu()
 				end
