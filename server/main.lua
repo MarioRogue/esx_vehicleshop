@@ -346,7 +346,7 @@ ESX.RegisterServerCallback('esx_vehicleshop:giveBackVehicle', function (source, 
 	end)
 end)
 
-ESX.RegisterServerCallback('esx_vehicleshop:resellVehicle', function (source, cb, plate, price)
+ESX.RegisterServerCallback('esx_vehicleshop:resellVehicle', function (source, cb, plate, price, oprice)
 	MySQL.Async.fetchAll('SELECT * FROM rented_vehicles WHERE plate = @plate', {
 		['@plate'] = plate
 	}, function (result)
@@ -363,7 +363,8 @@ ESX.RegisterServerCallback('esx_vehicleshop:resellVehicle', function (source, cb
 
 				-- does the owner match?
 				if result[1] ~= nil then
-					xPlayer.addMoney(price)
+					local supposesellprice = math.floor(oprice / 100 * Config.ResellPercentage)
+					xPlayer.addMoney(supposesellprice)
 					RemoveOwnedVehicle(plate)
 					cb(true)
 				else
